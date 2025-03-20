@@ -1,5 +1,9 @@
 "use client";
 
+import { AuthForm } from "@/components/custom/auth-form";
+import { SubmitButton } from "@/components/custom/submit-button";
+import Link from "next/link";
+
 export default function Page() {
     return (
         <div className="flex h-screen w-screen items-center justify-center bg-background">
@@ -10,7 +14,7 @@ export default function Page() {
             Use your email and password to sign in
           </p>
         </div>
-        {/* <AuthForm action={handleSubmit} defaultEmail={email}>
+        <AuthForm action={console.log('auth form')} defaultEmail={"test"}>
           <SubmitButton>Sign in</SubmitButton>
           <p className="text-center text-sm text-gray-600 mt-4 dark:text-zinc-400">
             {"Don't have an account? "}
@@ -22,7 +26,7 @@ export default function Page() {
             </Link>
             {" for free."}
           </p>
-        </AuthForm> */}
+        </AuthForm>
       </div>
     </div>
     );
