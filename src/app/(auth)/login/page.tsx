@@ -3,8 +3,26 @@
 import { AuthForm } from "@/components/custom/auth-form";
 import { SubmitButton } from "@/components/custom/submit-button";
 import Link from "next/link";
+import { useState } from "react";
+import axios from 'axios';
 
 export default function Page() {
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = async (formData: FormData) => {
+        setEmail(formData.get("email") as string);
+        try {
+            const password = formData.get("password") as string;
+            const response = await axios.post('/api/getUser', { email, password });
+            setMessage(response.data.message);
+            console.log(response.data);
+        } catch (error) {
+            setMessage('An error occurred');
+            console.log(error);
+        }
+    };
+
     return (
         <div className="flex h-screen w-screen items-center justify-center bg-background">
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-12">
@@ -14,7 +32,7 @@ export default function Page() {
             Use your email and password to sign in
           </p>
         </div>
-        <AuthForm action={console.log('auth form')} defaultEmail={"test"}>
+        <AuthForm action={handleSubmit} defaultEmail={"test"}>
           <SubmitButton>Sign in</SubmitButton>
           <p className="text-center text-sm text-gray-600 mt-4 dark:text-zinc-400">
             {"Don't have an account? "}
@@ -27,6 +45,7 @@ export default function Page() {
             {" for free."}
           </p>
         </AuthForm>
+        {message && <p>{message}</p>}
       </div>
     </div>
     );
