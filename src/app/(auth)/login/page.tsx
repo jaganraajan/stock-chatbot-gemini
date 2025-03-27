@@ -4,7 +4,8 @@ import { AuthForm } from "@/components/custom/auth-form";
 import { SubmitButton } from "@/components/custom/submit-button";
 import Link from "next/link";
 import { useState } from "react";
-import axios from 'axios';
+import { signIn } from "next-auth/react";
+// import axios from 'axios';
 
 export default function Page() {
     const [email, setEmail] = useState("");
@@ -14,9 +15,21 @@ export default function Page() {
         setEmail(formData.get("email") as string);
         try {
             const password = formData.get("password") as string;
-            const response = await axios.post('/api/getUser', { email, password });
-            setMessage(response.data.message);
-            console.log(response.data);
+            // const response = await axios.post('/api/getUser', { email, password });
+            // setMessage(response.data.message);
+            console.log("next auth signin");
+            const result = await signIn("credentials", {
+              redirect: false, // Prevent automatic redirection
+              email,
+              password,
+            });
+        
+            if (result?.error) {
+              setMessage(result.error);
+            } else {
+              // Redirect to the dashboard or another page after successful login
+              window.location.href = "/dashboard";
+            }
         } catch (error) {
             setMessage('An error occurred');
             console.log(error);
