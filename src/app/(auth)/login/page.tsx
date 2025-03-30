@@ -10,7 +10,7 @@ import { signIn } from "next-auth/react";
 export default function Page() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState('');
-
+        
     const handleSubmit = async (formData: FormData) => {
         setEmail(formData.get("email") as string);
         try {
@@ -23,12 +23,35 @@ export default function Page() {
               email,
               password,
             });
+
+            console.log(result);
         
             if (result?.error) {
               setMessage(result.error);
             } else {
               // Redirect to the dashboard or another page after successful login
-              window.location.href = "/dashboard";
+              // window.location.href = "/dashboard";
+              setMessage('Success login, redirecting...')
+            }
+
+            try {
+              const res = await fetch("/api/ai", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prompt: 'What can you do?' }),
+              });
+        
+              if (!res.ok) {
+                throw new Error("Failed to generate text");
+              }
+        
+              const data = await res.json();
+              console.log(data.response);
+            } catch (error) {
+              console.error("Error:", error);
+              // setResponse("An error occurred while generating text.");
             }
         } catch (error) {
             setMessage('An error occurred');
